@@ -1,0 +1,5 @@
+project.clj~
+lib/
+magicluster-0.0.1.jar
+**/*~
+.lein-deps-sum
