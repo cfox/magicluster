@@ -1,8 +1,7 @@
 (ns mc.in
   (:require [clojure.data.json :as json]
-            [net.cgrand.enlive-html :as html])
-  (:use mc.util
-        mc.magic)
+            [clojure.string :as string])
+  (:use (mc util magic))
   (:import (mc.magic Tournament Deck Slot)))
 
 (def tournament-listing-url
@@ -11,25 +10,40 @@
 (def tournament-base-url
      "http://www.wizards.com/Magic/Digital/MagicOnlineTourn.aspx?x=mtg/digital/magiconline/tourn/")
 
-(def deck-selector
-  [[:div.deck]])
-
 (defn fetch-listings
   "Fetch the current tournament listing from the What's Happening page."
   []
   (json/read-json (fetch-url tournament-listing-url)))
 
+(defn extract-slots
+  [markup]
+  (let [card-re #"(\d+).\s*<a class=\"nodec\"[^>]*>([\w ]+)<"
+        matches (re-seq card-re markup)
+        slot-builder
+        (fn [match] (Slot. (last match) (Integer/valueOf (second match))))]
+    (map slot-builder matches)))
+
 (defn extract-deck
   [markup]
-  "deck")
+  (let [sideboard-delimiter #"<i>Sideboard</i>"
+        [main sideboard] (string/split markup sideboard-delimiter)]
+    (Deck.
+     (extract-slots main)
+     (extract-slots sideboard))))
 
 (defn extract-tournament
   [listing]
   (let [url (str tournament-base-url (:Hyperlink listing))
-        doc (html/html-resource (java.net.URL. url))
-        decks (map extract-deck (html/select doc deck-selector))]
+        doc (fetch-url url)
+        deck-delimiter #"<div class=\"deck\">"
+        decks (map extract-deck (rest (string/split doc deck-delimiter)))]
     (Tournament.
      (:Hyperlink listing)
      (:Name listing)
      (:Date listing)
      decks)))
+
+(defn extract-one-tournament
+  []
+  (let [listings (fetch-listings)]
+    (extract-tournament (first listings))))
