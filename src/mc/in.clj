@@ -40,7 +40,7 @@
     (Tournament.
      (:Hyperlink listing)
      (:Name listing)
-     (:Date listing)
+     (fix-date (:Date listing))
      decks)))
 
 (defn extract-one-tournament
