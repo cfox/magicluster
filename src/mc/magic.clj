@@ -1,16 +1,26 @@
 (ns mc.magic)
 
 (defrecord Tournament
-    [id
-     name
-     date
-     decks])
+    [id                                 ;id from mtgo
+     name                               ;e.g. Standard Daily
+     date                               ;a java.util.Date
+     decks                              ;Decks
+     results                            ;Results
+     ])
 
 (defrecord Deck
-    [player
-     main
-     sideboard])
+    [player                             ;canonical player name
+     main                               ;Slots
+     sideboard                          ;Slots
+     ])
 
 (defrecord Slot
-    [card
-     count])
+    [card                               ;canonical card name
+     count                              ;integer between 1 and 4 inclusive
+     ])
+
+(defrecord Result
+    [player                             ;canonical player name
+     placing                            ;e.g. 1 for first place
+     points                             ;e.g. 12 for 3-1
+     ])

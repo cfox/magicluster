@@ -2,7 +2,7 @@
   (:require [clojure.data.json :as json]
             [clojure.string :as string])
   (:use (mc util magic))
-  (:import (mc.magic Tournament Deck Slot)))
+  (:import (mc.magic Tournament Deck Slot Result)))
 
 (def tournament-listing-url
      "http://www.wizards.com/handlers/XMLListService.ashx?dir=mtgo&type=XMLFileInfo&start=7")
@@ -26,7 +26,7 @@
 (defn extract-slots
   "Extracts some card slots from some deck markup."
   [markup]
-  (let [card-re #"(\d+).\s*<a class=\"nodec\"[^>]*>([\w ]+)<"
+  (let [card-re #"(\d+).\s*<a class=\"nodec\"[^>]*>([^<]+)<"
         matches (re-seq card-re markup)
         slot-builder
         (fn [match] (Slot. (last match) (Integer/valueOf (second match))))]
@@ -42,18 +42,38 @@
      (extract-slots main)
      (extract-slots sideboard))))
 
+(defn extract-player-results
+  "Extracts results for a specific player from some tournament markup."
+  [player markup]
+  (let [pattern (re-pattern (str "<td>([^<]+)</td>[^<]*<td>"
+                                 player
+                                 "</td>[^<]*<td>([^<]+)</td>"))
+        matches (re-seq pattern markup)
+        match (first matches)]
+    (Result.
+     player
+     (second match)
+     (last match))))
+
+(defn extract-results
+  "Extracts results from a list of players and some tournament markup."
+  [players markup]
+  (map extract-player-results players (repeat markup)))
+
 (defn extract-tournament
   "Given a tournament listing from the What's Happeng page, extracts one."
   [listing]
   (let [url (str tournament-base-url (:Hyperlink listing))
         doc (fetch-url url)
         deck-delimiter #"<div class=\"deck\">"
-        decks (map extract-deck (rest (string/split doc deck-delimiter)))]
+        decks (map extract-deck (rest (string/split doc deck-delimiter)))
+        results (extract-results (map :player decks) doc)]
     (Tournament.
      (:Hyperlink listing)
      (:Name listing)
      (fix-date (:Date listing))
-     decks)))
+     decks
+     results)))
 
 (defn extract-one-tournament
   []
