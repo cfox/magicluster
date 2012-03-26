@@ -15,7 +15,16 @@
   []
   (json/read-json (fetch-url tournament-listing-url)))
 
+(defn extract-player
+  "Extracts a player name from some deck markup."
+  [markup]
+  (let [player-re #"<heading>([^<]+)</heading>"]
+    (if-let [matches (re-seq player-re markup)]
+      (first (string/split (second (first matches)) #" "))
+      "unknown")))
+
 (defn extract-slots
+  "Extracts some card slots from some deck markup."
   [markup]
   (let [card-re #"(\d+).\s*<a class=\"nodec\"[^>]*>([\w ]+)<"
         matches (re-seq card-re markup)
@@ -24,14 +33,17 @@
     (map slot-builder matches)))
 
 (defn extract-deck
+  "Extracts a deck from some deck markup."
   [markup]
   (let [sideboard-delimiter #"<i>Sideboard</i>"
         [main sideboard] (string/split markup sideboard-delimiter)]
     (Deck.
+     (extract-player markup)
      (extract-slots main)
      (extract-slots sideboard))))
 
 (defn extract-tournament
+  "Given a tournament listing from the What's Happeng page, extracts one."
   [listing]
   (let [url (str tournament-base-url (:Hyperlink listing))
         doc (fetch-url url)

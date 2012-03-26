@@ -7,7 +7,8 @@
      decks])
 
 (defrecord Deck
-    [main
+    [player
+     main
      sideboard])
 
 (defrecord Slot
