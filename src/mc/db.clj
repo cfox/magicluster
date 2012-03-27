@@ -39,3 +39,9 @@
   []
   (maybe-init)
   (map :id (fetch :tournaments :only [:id])))
+
+(defn load-tournament-summaries
+  "Load some summary data for saved tournaments."
+  []
+  (maybe-init)
+  (fetch :tournaments :only [:id :name :date] :sort {:date -1}))
