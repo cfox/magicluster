@@ -33,3 +33,9 @@
   [id]
   (maybe-init)
   (fetch-one :tournaments :where {:id id}))
+
+(defn load-tournament-ids
+  "Load the ids of all saved tournaments."
+  []
+  (maybe-init)
+  (map :id (fetch :tournaments :only [:id])))
