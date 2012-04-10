@@ -30,6 +30,10 @@
         matches (re-seq card-re markup)
         slot-builder
         (fn [match] (Slot. (last match) (Integer/valueOf (second match))))]
+    ;;; random debug statement for heroku
+    (if (empty? matches)
+      (println "Found no slot matches for the following deck markup:")
+      (println markup))
     (map slot-builder matches)))
 
 (defn extract-deck
