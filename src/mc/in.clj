@@ -18,7 +18,6 @@
 (defn extract-player
   "Extracts a player name from some deck markup."
   [markup]
-  (assert (not (empty? markup)))
   (let [player-re #"<heading>([^<]+)</heading>"]
     (if-let [matches (re-seq player-re markup)]
       (first (string/split (second (first matches)) #" "))
@@ -27,8 +26,7 @@
 (defn extract-slots
   "Extracts some card slots from some deck markup."
   [markup]
-  (assert (not (empty? markup)))
-  (let [card-re #"(\d+).\s*<a class=\"nodec\"[^>]*>([^<]+)<"
+  (let [card-re #"(\d+)[^<]*<a class=\"nodec\"[^>]*>([^<]+)<"
         matches (re-seq card-re markup)
         slot-builder
         (fn [match] (Slot. (last match) (Integer/valueOf (second match))))]
@@ -37,7 +35,6 @@
 (defn extract-deck
   "Extracts a deck from some deck markup."
   [markup]
-  (assert (not (empty? markup)))
   (let [sideboard-delimiter #"<i>Sideboard</i>"
         [main sideboard] (string/split markup sideboard-delimiter)]
     (Deck.
@@ -48,8 +45,6 @@
 (defn extract-player-results
   "Extracts results for a specific player from some tournament markup."
   [player markup]
-  (assert (not (empty? player)))
-  (assert (not (empty? markup)))
   (let [pattern (re-pattern (str "<td>([^<]+)</td>[^<]*<td>"
                                  player
                                  "</td>[^<]*<td>([^<]+)</td>"))
@@ -63,8 +58,6 @@
 (defn extract-results
   "Extracts results from a list of players and some tournament markup."
   [players markup]
-  (assert (not (empty? players)))
-  (assert (not (empty? markup)))
   (map extract-player-results players (repeat markup)))
 
 (defn extract-tournament
