@@ -1,0 +1,30 @@
+* Now that the deck parsing on Heroku works, need to clean bad data.
+- write a deamon to delete bad tournaments (or maybe just a one-time task)
+  - such as ones with decks with no cards in them
+  - or ones with like 100+ cards in them
+
+* web pages!
+- kiss first
+  - tournament listing page (/tournaments)
+  - tournament detail page (/tournament/:id)
+
+* schema work
+- add name index to help format/tournament type queries
+- are we reindexing in (maybe-setup) unnecessarily?
+
+* better error handling in extractor
+- try catch around each extraction
+- maybe stack traces in log
+- maybe not retry failed tournaments over and over
+
+* get it running daily on Heroku (done!)
+- extractor deamon
+- retrieve listings
+- retrieve tournament ids already in Mongo
+- for new listings, extract tournaments and save
+- might be nice to log activity (println)
+- create a main/executable entry point (lein run :extractor)
+- test execution of one-off processes on heroku (heroku run:detached lein run...)
+- add scheduler to heroku app and invoke deamon hourly
+  -heroku addons:add scheduler
+  -heroku addons:open scheduler

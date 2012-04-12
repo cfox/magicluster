@@ -26,7 +26,7 @@
 (defn extract-slots
   "Extracts some card slots from some deck markup."
   [markup]
-  (let [card-re #"(\d+)[^<]*<a class=\"nodec\"[^>]*>([^<]+)<"
+  (let [card-re #">(\d+)[^<]*<a class=\"nodec\"[^>]*>([^<]+)<"
         matches (re-seq card-re markup)
         slot-builder
         (fn [match] (Slot. (last match) (Integer/valueOf (second match))))]
@@ -79,3 +79,8 @@
   []
   (let [listings (fetch-listings)]
     (extract-tournament (first listings))))
+
+(defn extract-tournament-by-id
+  [id]
+  (let [listing {:Hyperlink id :Name (str "Tournament " id) :Date "12/25"}]
+    (extract-tournament listing)))
