@@ -24,3 +24,11 @@
      placing                            ;e.g. 1 for first place
      points                             ;e.g. 12 for 3-1
      ])
+
+(defrecord Card
+    [name                               ;canonical card name
+     cost                               ;e.g. 2B
+     type                               ;e.g. Sorcery or Creature -- Elf
+     pt                                 ;e.g. 2/1
+     text                               ;sequence of lines
+     ])

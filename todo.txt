@@ -1,12 +1,22 @@
+* Now that we have some good data, what about backing it up?
+
 * Now that the deck parsing on Heroku works, need to clean bad data.
 - write a deamon to delete bad tournaments (or maybe just a one-time task)
   - such as ones with decks with no cards in them
   - or ones with like 100+ cards in them
+  - see mc.data, but beware -- I ran it and it wiped out all decks!
 
 * web pages!
 - kiss first
   - tournament listing page (/tournaments)
   - tournament detail page (/tournament/:id)
+  - format summary page (/format/:code)
+    - top 10 cards
+    - movers and shakers
+    - top decks
+  - really need a deck listing partial that groups lands, creatures, etc.
+    - means I need a card database :(
+
 
 * schema work
 - add name index to help format/tournament type queries
@@ -16,6 +26,10 @@
 - try catch around each extraction
 - maybe stack traces in log
 - maybe not retry failed tournaments over and over
+
+
+
+BELOW HERE ARE THINGS THAT ARE DONE
 
 * get it running daily on Heroku (done!)
 - extractor deamon
