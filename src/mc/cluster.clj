@@ -81,3 +81,35 @@
                                 initial-medoids)))
         clusters (groups distance points medoids)]
     (zipmap medoids clusters)))
+
+(defn average-dissimilarity
+  "Average dissimilarity between a point and a cluster using distance."
+  [distance point cluster]
+  (let [total-distance (reduce + (map (partial distance point) cluster))]
+    (/ total-distance (count cluster))))
+
+(defn point-silhouette
+  "s(i) for a single point."
+  [distance cluster neighbors point]
+  (let [ai (average-dissimilarity distance point cluster)
+        bi (first (sort (map (partial average-dissimilarity distance point)
+                             neighbors)))]
+    (/ (- bi ai) (Math/max ai bi))))
+
+(defn cluster-silhouette
+  "Average s(i) for all the points in a cluster."
+  [distance cluster neighbors]
+  (let [si-total
+        (reduce + (map (partial point-silhouette distance cluster neighbors)
+                       cluster))]
+    (/ si-total (count cluster))))
+
+(defn silhouette
+  "Average s(i) for an entire dataset."
+  [distance clusters]
+  (let [clustered-point-silhouettes
+        (for [cluster clusters
+              :let [neighbors (remove #(= cluster %) clusters)]]
+          (map (partial point-silhouette distance cluster neighbors) cluster))
+        point-silhouettes (flatten clustered-point-silhouettes)]
+    (/ (reduce + point-silhouettes) (count point-silhouettes))))
