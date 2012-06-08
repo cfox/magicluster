@@ -54,3 +54,14 @@
    (parse-pt text)
    (parse-text text)
    ))
+
+(defn load-all-cards
+  []
+  (let [cards (map parse-card (card-text-seq "data/All.txt"))]
+    (zipmap (map :name cards) cards)))
+
+(def get-cards (memoize load-all-cards))
+
+(defn get-card
+  [name]
+  (get (get-cards) name))
