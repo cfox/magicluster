@@ -43,5 +43,5 @@
 (defn decks-to-beat
   [tournaments]
   (let [[dimensions deck-vectors] (vectorize-metagame tournaments)
-        medoids (keys (k-medoids deck-vectors 4 0.5))]
+        medoids (keys (best-k-medoids deck-vectors 5 0.5 10))]
     (map (partial unvectorize-deck dimensions) medoids)))

@@ -1,7 +1,7 @@
 (ns mc.views.welcome
   (:require [mc.views.common :as common]
             [noir.content.pages :as pages])
-  (:use (mc db cards util)
+  (:use (mc db cards util metagame)
         noir.core
         hiccup.core
         hiccup.page-helpers))
@@ -76,8 +76,10 @@
         tournament-summary (str (:name tournament) " #" (:id tournament)
                                 " on " (.format formatter (:date tournament)))]
     [:table {:bgcolor "#E0E0E0" :border 5}
-     [:tr [:td (str (:player deck) " " result-summary)]]
-     [:tr [:td tournament-summary]]
+     [:tr
+      [:td  {:colspan 2} (str (:player deck) " " result-summary)]]
+     [:tr
+      [:td  {:colspan 2} tournament-summary]]
      [:tr
       [:td (deck-listing deck)]
       [:td "rollover here"]]]
@@ -87,35 +89,16 @@
   (let [t (load-tournament tournament-id)]
     (map deck-listing-full (:decks t) (repeat t))))
 
+(defn hash-cardset
+  [cards]
+  (hash (zipmap (map :card cards) (map :count cards))))
 
-;;; This is all jacked up
-(defpartial table-header [val]
-  [:th val])
-
-(defpartial card-list-item [card]
-  [:li card])
-
-(defpartial deck-cell-chunks [count ss]
-  (let [cards (sort (map :card (filter #(= (:count %) count) ss)))]
-    [:td [:ul (map card-list-item cards)]]))
-
-(defpartial deck-block [ss]
-  (let [counts (reverse (sort (set (map :count ss))))]
-    [:table
-     [:tr (map table-header counts)]
-     [:tr (map deck-cell-chunks counts (repeat ss))]
-     ]))
-
-(defpartial deck-detail [d]
-  [:div (:player d)]
-  [:div.main (deck-block (:main d))]
-  [:div.sideboard (deck-block (:sideboard d))])
-
-(defpartial tournament-detail [t]
-  [:div (tournament-link t)]
-  [:ul.decks (map deck-detail (:decks t))]
-  [:pre (str t)])
-
-(defpage "/tournament-ugly/:id" {tournament-id :id}
-  (let [t (load-tournament tournament-id)]
-    (tournament-detail t)))
+(defpage "/tournament/:id/metagame"
+  {tournament-id :id}
+  (let [t (load-tournament (.toString tournament-id))
+        dtb (decks-to-beat [t])
+        dtb-hashes (map hash-cardset dtb)
+        deck-hash-map (zipmap (map #(hash-cardset (:main %)) (:decks t))
+                              (:decks t))
+        decks (map (partial get deck-hash-map) dtb-hashes)]
+    (map deck-listing-full decks (repeat t))))

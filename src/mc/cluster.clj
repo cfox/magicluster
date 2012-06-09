@@ -113,3 +113,10 @@
           (map (partial point-silhouette distance cluster neighbors) cluster))
         point-silhouettes (flatten clustered-point-silhouettes)]
     (/ (reduce + point-silhouettes) (count point-silhouettes))))
+
+(defn best-k-medoids
+  "Partition n times and return the one with the best silhouette."
+  [points k f n]
+  (let [partitions (repeatedly n #(k-medoids points k f))
+        distance (memoized-fractional-distance-fn f)]
+    (last (sort-by #(silhouette distance (vals %)) partitions))))
