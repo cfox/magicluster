@@ -31,4 +31,10 @@
      type                               ;e.g. Sorcery or Creature -- Elf
      pt                                 ;e.g. 2/1
      text                               ;sequence of lines
+     printings				;map of set abbreviations to rarity
+     ])
+
+(defrecord Set
+    [abbr				;set abbreviation
+     name				;set name
      ])

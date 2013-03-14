@@ -1,6 +1,7 @@
 (ns mc.cards
   (:use mc.magic)
   (:use [clojure.contrib.duck-streams :only [read-lines]])
+  (:use [clojure.string :only [split]])
   (:import (mc.magic Card)))
 
 (def cost-re #"[\(\)/ 0-9WwUuBbGgRrXp]+")
@@ -45,6 +46,14 @@
         lines (- (count text) start 1)]
     (take lines (drop start text))))
 
+(defn parse-printings
+  [text]
+  (let [printings-re #"^[A-Z0-9]+-[A-Z][, A-Z0-9-]*"
+        last-line (last text)]
+    (if (re-matches printings-re last-line)
+      (reduce conj {} (map #(split % #"-") (split last-line #", ")))
+      {})))
+
 (defn parse-card
   [text]
   (Card.
@@ -53,6 +62,7 @@
    (parse-type text)
    (parse-pt text)
    (parse-text text)
+   (parse-printings text)
    ))
 
 (defn load-all-cards
