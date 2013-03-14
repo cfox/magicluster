@@ -1,0 +1,75 @@
+A Alpha
+B Beta
+U Unlimited
+RV Revised
+4E Fourth Edition
+5E Fifth Edition
+6E Sixth Edition
+7E Seventh Edition
+8ED Eighth Edition
+9ED Ninth Edition
+10E Tenth Edition
+M10 Magic 2010
+M11 Magic 2011
+M12 Magic 2012
+M13 Magic 2013
+AN Arabian Nights
+AQ Antiquities
+LE Legends
+DK The Dark
+FE Fallen Empires
+HL Homelands
+IA Ice Age
+AI Alliances
+CSP Coldsnap
+MI Mirage
+VI Visions
+WL Weatherlight
+TE Tempest
+ST Stronghold
+EX Exodus
+US Urza's Saga
+UL Urza's Legacy
+UD Urza's Destiny
+MM Mercadian Masques
+NE Nemesis
+PR Prophecy
+IN Invasion
+PS Planeshift
+AP Apocalypse
+OD Odyssey
+TOR Torment
+JUD Judgment
+ONS Onslaught
+LGN Legions
+SCG Scourge
+MRD Mirrodin
+DST Darksteel
+5DN Fifth Dawn
+CHK Champions of Kamigawa
+BOK Betrayers of Kamigawa
+SOK Saviors of Kamigawa
+RAV Ravnica: City of Guilds
+GPT Guildpact
+DIS Dissension
+TSP Time Spiral
+PLC Planar Chaos
+FUT Future Sight
+LRW Lorwyn
+MOR Morningtide
+SHM Shadowmoor
+EVE Eventide
+ALA Shards of Alara
+CON Conflux
+ARB Alara Reborn
+ZEN Zendikar
+WWK Worldwake
+ROE Rise of the Eldrazi
+SOM Scars of Mirrodin
+MBS Mirrodin Besieged
+NPH New Phyrexia
+ISD Innistrad
+DKA Dark Ascension
+AVR Avacyn Restored
+RTRReturn to Ravnica
+GTC Gatecrash
