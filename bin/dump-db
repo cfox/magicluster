@@ -1,0 +1,3 @@
+#!/bin/sh
+
+mongodump --host staff.mongohq.com:10096 --db app3441684 -u heroku -p69ff5fb36833ac64e41bad59bc0a5abe -o backup
